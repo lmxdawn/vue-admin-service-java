@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.lmxdawn.user.dao.MemberDao">
+
+    <select id="listAll" resultType="com.lmxdawn.user.entity.Member">
+        SELECT member_id
+        FROM member
+    </select>
+
+    <select id="findByMemberId" resultType="com.lmxdawn.user.entity.Member">
+        SELECT member_id,tel_area_code,tel,email,pwd,pay_pwd,google_key,`name`,avatar,remark
+        FROM member
+        <where>
+            member_id = #{memberId}
+        </where>
+        LIMIT 1
+    </select>
+
+    <select id="findPwdByMemberId" resultType="com.lmxdawn.user.entity.Member">
+        SELECT pwd,pay_pwd,google_key
+        FROM member
+        <where>
+            member_id = #{memberId}
+        </where>
+        LIMIT 1
+    </select>
+
+    <select id="findByTel" parameterType="hashmap" resultType="com.lmxdawn.user.entity.Member">
+        SELECT member_id,pwd
+        FROM member
+        <where>
+            tel = #{tel}
+        </where>
+        LIMIT 1
+    </select>
+
+    <select id="findByEmail" parameterType="hashmap" resultType="com.lmxdawn.user.entity.Member">
+        SELECT member_id,pwd
+        FROM member
+        <where>
+            email = #{email}
+        </where>
+        LIMIT 1
+    </select>
+
+    <insert id="insert" keyProperty="memberId" parameterType="com.lmxdawn.user.entity.Member">
+        INSERT INTO `member`(tel_area_code,tel,email,pwd,`name`,avatar,create_time,modified_time)
+        VALUES
+        (#{telAreaCode},
+         #{tel},
+         #{email},
+         #{pwd},
+         #{name},
+         #{avatar},
+         #{createTime},
+         #{modifiedTime})
+    </insert>
+
+    <update id="update" parameterType="com.lmxdawn.user.entity.Member">
+        UPDATE `member`
+        <trim prefix="set" suffixOverrides=",">
+            <if test="telAreaCode != null">`tel_area_code`=#{telAreaCode},</if>
+            <if test="tel != null">`tel`=#{tel},</if>
+            <if test="email != null">`email`=#{email},</if>
+            <if test="pwd != null">`pwd`=#{pwd},</if>
+            <if test="payPwd != null">`pay_pwd`=#{payPwd},</if>
+            <if test="googleKey != null">`google_key`=#{googleKey},</if>
+            <if test="name != null">`name`=#{name},</if>
+            <if test="avatar != null">`avatar`=#{avatar},</if>
+            <if test="modifiedTime != null">`modified_time`=#{modifiedTime},</if>
+        </trim>
+        WHERE `member_id` = #{memberId}
+    </update>
+
+</mapper>
